@@ -1,0 +1,34 @@
+version: '3.8'
+
+services:
+  bot:
+    build: .
+    environment:
+      - CURRENCY_PAIRS=BTC-USD,ETH-USD,XRP-USD,ADA-USD,GALA-USD,BAT-USD,BCH-USD,BAL-USD,COMP-USD,DGB-USD,DOGE-USD,DOT-USD,EOS-USD
+      - FETCH_INTERVAL=5000
+      - THRESHOLD_PERCENT=0.01
+      - PG_HOST=postgres
+      - PG_PORT=5432
+      - PG_USER=postgres
+      - PG_PASSWORD=postgres
+      - PG_DATABASE=uphold_bot
+      - PG_MAX_CLIENTS=10
+      - PG_IDLE_TIMEOUT=30000
+    depends_on:
+      - postgres
+    restart: always
+
+  postgres:
+    image: postgres:15
+    container_name: uphold-postgres
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: uphold_bot
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
+volumes:
+  postgres_data:
